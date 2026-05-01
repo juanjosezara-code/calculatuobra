@@ -3,10 +3,9 @@ import { Resend } from 'resend';
 import { formatearPesos } from '@/lib/calculos';
 import type { DatosPresupuesto } from '@/lib/generarPDF';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: NextRequest) {
   try {
+    const resend = new Resend(process.env.RESEND_API_KEY);
     const { email, datos, waUrl } = (await req.json()) as {
       email: string;
       datos: DatosPresupuesto;
