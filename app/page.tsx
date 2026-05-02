@@ -21,7 +21,7 @@ const pasos = [
 const beneficios = [
   {
     titulo: 'Precios de mercado reales',
-    desc: 'Calibrado con +50 presupuestos formales de obras ejecutadas en Santiago por un equipo profesional en arquitectura y construcción.',
+    desc: 'Calibrado con +500 presupuestos formales de obras ejecutadas en Santiago por un equipo profesional en arquitectura y construcción.',
     icon: (
       <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden>
         <path d="M11 2L3 6v10l8 4 8-4V6L11 2Z" stroke="#f97316" strokeWidth="1.8" strokeLinejoin="round" />
