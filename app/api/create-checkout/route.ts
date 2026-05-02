@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
             title: 'Informe PDF — CalculaTuObra.cl',
             description: `${tipo} · ${superficie} m² · Terminación ${terminacion}`,
             quantity: 1,
-            unit_price: 8990,
+            unit_price: 1000,
             currency_id: 'CLP',
           },
         ],
