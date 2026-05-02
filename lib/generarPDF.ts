@@ -35,28 +35,47 @@ const W        = 210;
 const MARGEN   = 16;
 const CONTENIDO = W - MARGEN * 2;
 
+function drawHouseIcon(doc: jsPDF, x: number, y: number) {
+  const w = 9;
+  const h = 13;
+  const rh = 5;
+  doc.setFillColor(255, 255, 255);
+  doc.lines(
+    [[w / 2, -rh], [w / 2, rh], [0, h - rh], [-w, 0], [0, -(h - rh)]],
+    x, y + rh, [1, 1], 'F', true,
+  );
+  // door cutout (orange = background)
+  doc.setFillColor(...NARANJA);
+  doc.rect(x + w * 0.32, y + h * 0.52, w * 0.36, h * 0.48, 'F');
+}
+
 function buildDoc(datos: DatosPresupuesto): jsPDF {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   let y = 0;
 
   // ── HEADER ──────────────────────────────────────────────────────────────────
   doc.setFillColor(...NARANJA);
-  doc.rect(0, 0, W, 30, 'F');
+  doc.rect(0, 0, W, 32, 'F');
+
+  drawHouseIcon(doc, MARGEN, 8);
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(17);
   doc.setTextColor(255, 255, 255);
-  doc.text('CalculaTuObra.cl', MARGEN, 13);
+  doc.text('CalculaTuObra.cl', MARGEN + 12, 15);
 
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(9);
-  doc.text('Informe de Presupuesto Referencial', MARGEN, 21);
+  doc.setFontSize(8.5);
+  doc.setTextColor(240, 220, 200);
+  doc.text('Informe de Presupuesto Referencial', MARGEN + 12, 23);
 
   doc.setFontSize(8.5);
-  doc.text(fechaActual(), W - MARGEN, 13, { align: 'right' });
-  doc.text('Valores en pesos chilenos (CLP)', W - MARGEN, 21, { align: 'right' });
+  doc.setTextColor(255, 255, 255);
+  doc.text(fechaActual(), W - MARGEN, 15, { align: 'right' });
+  doc.setTextColor(240, 220, 200);
+  doc.text('Valores en pesos chilenos (CLP)', W - MARGEN, 23, { align: 'right' });
 
-  y = 38;
+  y = 40;
 
   // ── DATOS DEL PROYECTO ───────────────────────────────────────────────────────
   seccionTitulo(doc, 'Datos del proyecto', y);
@@ -207,19 +226,28 @@ function buildDoc(datos: DatosPresupuesto): jsPDF {
 
   // ── FOOTER ────────────────────────────────────────────────────────────────
   const pageH = 297;
+  const fl = pageH - 20;
+
   doc.setDrawColor(...LINEA);
   doc.setLineWidth(0.3);
-  doc.line(MARGEN, pageH - 14, W - MARGEN, pageH - 14);
+  doc.line(MARGEN, fl, W - MARGEN, fl);
 
-  doc.setFont('helvetica', 'italic');
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(7.5);
+  doc.setTextColor(...NARANJA);
+  doc.text('CalculaTuObra.cl', MARGEN, fl + 6);
+
+  doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
   doc.setTextColor(...GRIS);
+  doc.text(fechaActual(), W - MARGEN, fl + 6, { align: 'right' });
+
+  doc.setFont('helvetica', 'italic');
+  doc.setFontSize(6.5);
   doc.text(
     'Valores referenciales. Consultar con profesional habilitado antes de tomar decisiones.',
-    W / 2, pageH - 8, { align: 'center' },
+    W / 2, fl + 13, { align: 'center' },
   );
-  doc.text('CalculaTuObra.cl', MARGEN, pageH - 8);
-  doc.text(fechaActual(), W - MARGEN, pageH - 8, { align: 'right' });
 
   return doc;
 }
