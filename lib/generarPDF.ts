@@ -55,7 +55,7 @@ function buildDoc(datos: DatosPresupuesto): jsPDF {
 
   // ── HEADER ──────────────────────────────────────────────────────────────────
   doc.setFillColor(...NARANJA);
-  doc.rect(0, 0, W, 32, 'F');
+  doc.rect(0, 0, W, 30, 'F');
 
   drawHouseIcon(doc, MARGEN, 8);
 
@@ -75,7 +75,7 @@ function buildDoc(datos: DatosPresupuesto): jsPDF {
   doc.setTextColor(240, 220, 200);
   doc.text('Valores en pesos chilenos (CLP)', W - MARGEN, 23, { align: 'right' });
 
-  y = 40;
+  y = 38;
 
   // ── DATOS DEL PROYECTO ───────────────────────────────────────────────────────
   seccionTitulo(doc, 'Datos del proyecto', y);
@@ -98,25 +98,25 @@ function buildDoc(datos: DatosPresupuesto): jsPDF {
     y += 7;
   }
 
-  y += 4;
+  y += 3;
 
   // ── ESTIMACIÓN ───────────────────────────────────────────────────────────────
   doc.setFillColor(...NARANJA_LIGHT);
   doc.setDrawColor(...NARANJA);
   doc.setLineWidth(0.4);
-  doc.roundedRect(MARGEN, y, CONTENIDO, 28, 3, 3, 'FD');
+  doc.roundedRect(MARGEN, y, CONTENIDO, 26, 3, 3, 'FD');
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(...GRIS);
-  doc.text('RANGO ESTIMADO TOTAL', MARGEN + 5, y + 7);
+  doc.text('RANGO ESTIMADO TOTAL', MARGEN + 5, y + 6);
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(16);
   doc.setTextColor(...NEGRO);
   doc.text(
     `${formatearPesos(datos.costoMin)}  —  ${formatearPesos(datos.costoMax)}`,
-    MARGEN + 5, y + 18,
+    MARGEN + 5, y + 17,
   );
 
   doc.setFont('helvetica', 'normal');
@@ -124,10 +124,10 @@ function buildDoc(datos: DatosPresupuesto): jsPDF {
   doc.setTextColor(...GRIS);
   doc.text(
     `Valor referencial por m²: ${formatearPesos(datos.valorM2)}`,
-    W - MARGEN - 4, y + 25, { align: 'right' },
+    W - MARGEN - 4, y + 23, { align: 'right' },
   );
 
-  y += 36;
+  y += 31;
 
   // ── TABLA DE DESGLOSE DETALLADA ──────────────────────────────────────────────
   seccionTitulo(doc, 'Desglose por partidas', y);
@@ -167,34 +167,32 @@ function buildDoc(datos: DatosPresupuesto): jsPDF {
       const monto = Math.round(cat.total * p.porcentaje / 100);
 
       doc.setFillColor(i % 2 === 0 ? 255 : 250, i % 2 === 0 ? 255 : 250, i % 2 === 0 ? 255 : 250);
-      doc.rect(MARGEN, y, CONTENIDO, 7.5, 'F');
+      doc.rect(MARGEN, y, CONTENIDO, 6.5, 'F');
       doc.setDrawColor(...LINEA);
       doc.setLineWidth(0.1);
-      doc.line(MARGEN, y + 7.5, MARGEN + CONTENIDO, y + 7.5);
+      doc.line(MARGEN, y + 6.5, MARGEN + CONTENIDO, y + 6.5);
 
       // Barra naranja lateral
       doc.setFillColor(...NARANJA);
-      doc.rect(MARGEN, y, 1.5, 7.5, 'F');
+      doc.rect(MARGEN, y, 1.5, 6.5, 'F');
 
       doc.setFont('helvetica', 'normal');
       doc.setFontSize(8.5);
       doc.setTextColor(...NEGRO);
-      doc.text(p.nombre, MARGEN + 5, y + 5);
+      doc.text(p.nombre, MARGEN + 5, y + 4.5);
 
       doc.setTextColor(...GRIS);
-      doc.text(`${p.porcentaje}%`, MARGEN + CONTENIDO * 0.62, y + 5, { align: 'center' });
+      doc.text(`${p.porcentaje}%`, MARGEN + CONTENIDO * 0.62, y + 4.5, { align: 'center' });
 
       doc.setFont('helvetica', 'bold');
       doc.setTextColor(...NEGRO);
-      doc.text(formatearPesos(monto), W - MARGEN - 3, y + 5, { align: 'right' });
+      doc.text(formatearPesos(monto), W - MARGEN - 3, y + 4.5, { align: 'right' });
 
-      y += 7.5;
+      y += 6.5;
     }
 
-    y += 4;
+    y += 2.5;
   }
-
-  y += 2;
 
   // ── TEXTO PARA EL CONTRATISTA ─────────────────────────────────────────────
   seccionTitulo(doc, 'Texto para enviar a tu contratista', y);
@@ -226,7 +224,7 @@ function buildDoc(datos: DatosPresupuesto): jsPDF {
 
   // ── FOOTER ────────────────────────────────────────────────────────────────
   const pageH = 297;
-  const fl = pageH - 20;
+  const fl = pageH - 16;
 
   doc.setDrawColor(...LINEA);
   doc.setLineWidth(0.3);
