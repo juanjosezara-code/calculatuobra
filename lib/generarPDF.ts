@@ -35,47 +35,70 @@ const W        = 210;
 const MARGEN   = 16;
 const CONTENIDO = W - MARGEN * 2;
 
-function drawHouseIcon(doc: jsPDF, x: number, y: number) {
-  const w = 9;
-  const h = 13;
-  const rh = 5;
+function drawLogoIcon(doc: jsPDF, x: number, y: number, size: number) {
+  // White rounded badge (matching the web logo)
   doc.setFillColor(255, 255, 255);
-  doc.lines(
-    [[w / 2, -rh], [w / 2, rh], [0, h - rh], [-w, 0], [0, -(h - rh)]],
-    x, y + rh, [1, 1], 'F', true,
-  );
-  // door cutout (orange = background)
+  doc.roundedRect(x, y, size, size, size * 0.22, size * 0.22, 'F');
+
+  // Orange house inside the badge
+  const p = size * 0.18;
+  const iw = size - p * 2;
+  const ih = size - p * 2;
+  const rx = x + p;
+  const ry = y + p;
+  const roofH = ih * 0.42;
+
   doc.setFillColor(...NARANJA);
-  doc.rect(x + w * 0.32, y + h * 0.52, w * 0.36, h * 0.48, 'F');
+  doc.lines(
+    [[iw / 2, -roofH], [iw / 2, roofH], [0, ih - roofH], [-iw, 0], [0, -(ih - roofH)]],
+    rx, ry + roofH, [1, 1], 'F', true,
+  );
+
+  // White door cutout
+  doc.setFillColor(255, 255, 255);
+  doc.rect(rx + iw * 0.33, ry + ih * 0.55, iw * 0.34, ih * 0.45, 'F');
 }
 
 function buildDoc(datos: DatosPresupuesto): jsPDF {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   let y = 0;
 
-  // ── HEADER ──────────────────────────────────────────────────────────────────
+  // ── HEADER (compact white bar) ───────────────────────────────────────────────
+  const HDR = 22;
+  doc.setFillColor(255, 255, 255);
+  doc.rect(0, 0, W, HDR, 'F');
+
+  // Thin orange bottom border
   doc.setFillColor(...NARANJA);
-  doc.rect(0, 0, W, 30, 'F');
+  doc.rect(0, HDR - 0.8, W, 0.8, 'F');
 
-  drawHouseIcon(doc, MARGEN, 8);
+  const iconSize = 13;
+  const iconY = (HDR - iconSize) / 2;
+  drawLogoIcon(doc, MARGEN, iconY, iconSize);
 
+  // "CalculaTuObra" dark + ".cl" orange
+  const textX = MARGEN + iconSize + 3;
+  const textY = HDR / 2 + 2;
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(17);
-  doc.setTextColor(255, 255, 255);
-  doc.text('CalculaTuObra.cl', MARGEN + 12, 15);
+  doc.setFontSize(13);
+  doc.setTextColor(15, 23, 42);
+  doc.text('CalculaTuObra', textX, textY);
+  const anchoBase = doc.getTextWidth('CalculaTuObra');
+  doc.setTextColor(...NARANJA);
+  doc.text('.cl', textX + anchoBase, textY);
 
+  // Subtitle + date on right
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8.5);
-  doc.setTextColor(240, 220, 200);
-  doc.text('Informe de Presupuesto Referencial', MARGEN + 12, 23);
+  doc.setFontSize(7.5);
+  doc.setTextColor(...GRIS);
+  doc.text('Informe de Presupuesto Referencial', textX, textY + 5);
+  doc.text(fechaActual(), W - MARGEN, textY + 5, { align: 'right' });
 
-  doc.setFontSize(8.5);
-  doc.setTextColor(255, 255, 255);
-  doc.text(fechaActual(), W - MARGEN, 15, { align: 'right' });
-  doc.setTextColor(240, 220, 200);
-  doc.text('Valores en pesos chilenos (CLP)', W - MARGEN, 23, { align: 'right' });
+  y = HDR + 8;
 
-  y = 38;
+  // ── DATOS DEL PROYECTO ───────────────────────────────────────────────────────
+  seccionTitulo(doc, 'Datos del proyecto', y);
+  y += 8;
 
   // ── DATOS DEL PROYECTO ───────────────────────────────────────────────────────
   seccionTitulo(doc, 'Datos del proyecto', y);
