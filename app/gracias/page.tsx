@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import { generarPDF, type DatosPresupuesto } from '@/lib/generarPDF';
@@ -31,6 +31,14 @@ const EMAIL_INCLUYE = [
 ];
 
 export default function GraciasPage() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-slate-50 flex items-center justify-center"><p className="text-slate-400 text-sm">Cargando…</p></div>}>
+      <GraciasContent />
+    </Suspense>
+  );
+}
+
+function GraciasContent() {
   const [datos, setDatos]             = useState<DatosPresupuesto | null>(null);
   const [descargando, setDescargando] = useState(false);
   const [errorDesc, setErrorDesc]     = useState('');
