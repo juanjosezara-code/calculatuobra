@@ -223,7 +223,7 @@ export default function CalculadoraPage() {
               <div className="flex flex-col items-center gap-1">
                 <div className="flex items-center gap-2 text-sm">
                   <span className="text-slate-400 line-through">$18.990</span>
-                  <span className="font-bold text-slate-900">$8.990</span>
+                  <span className="font-bold text-slate-900">$5.990</span>
                   <span className="text-[#f97316] font-semibold">hoy</span>
                 </div>
                 <p className="text-[11px] text-slate-400">Precio de lanzamiento por tiempo limitado</p>
