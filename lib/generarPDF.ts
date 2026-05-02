@@ -42,32 +42,27 @@ function buildDoc(datos: DatosPresupuesto): jsPDF {
 
   // ── HEADER ───────────────────────────────────────────────────────────────────
   // Logo PNG — 1146×349px → ratio 3.28
-  const logoH = 22;
-  const logoW = Math.round(logoH * 3.28); // 72mm
-  doc.addImage(LOGO_PNG_B64, 'PNG', MARGEN, 7, logoW, logoH);
+  const logoH = 15;
+  const logoW = Math.round(logoH * 3.28); // ~49mm
+  doc.addImage(LOGO_PNG_B64, 'PNG', MARGEN, 6, logoW, logoH);
 
   // Subtítulo bajo el logo
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8);
+  doc.setFontSize(7.5);
   doc.setTextColor(...GRIS);
-  doc.text('Informe de Presupuesto Referencial', MARGEN + 1, 7 + logoH + 4);
+  doc.text('Informe de Presupuesto Referencial', MARGEN + 1, 6 + logoH + 3.5);
 
-  // Fecha arriba a la derecha
-  doc.setFontSize(8);
+  // Fecha alineada a la derecha, centrada verticalmente con el logo
+  doc.setFontSize(7.5);
   doc.setTextColor(...GRIS);
-  doc.text(fechaActual(), W - MARGEN, 14, { align: 'right' });
+  doc.text(fechaActual(), W - MARGEN, 6 + logoH / 2 + 1, { align: 'right' });
 
   // Línea naranja separadora
-  const HDR = 38;
   doc.setDrawColor(...NARANJA);
   doc.setLineWidth(0.6);
-  doc.line(MARGEN, HDR, W - MARGEN, HDR);
+  doc.line(MARGEN, 30, W - MARGEN, 30);
 
-  y = HDR + 8;
-
-  // ── DATOS DEL PROYECTO ───────────────────────────────────────────────────────
-  seccionTitulo(doc, 'Datos del proyecto', y);
-  y += 8;
+  y = 38;
 
   // ── DATOS DEL PROYECTO ───────────────────────────────────────────────────────
   seccionTitulo(doc, 'Datos del proyecto', y);
@@ -187,6 +182,7 @@ function buildDoc(datos: DatosPresupuesto): jsPDF {
   }
 
   // ── TEXTO PARA EL CONTRATISTA ─────────────────────────────────────────────
+  y += 4;
   seccionTitulo(doc, 'Texto para enviar a tu contratista', y);
   y += 8;
 
