@@ -42,6 +42,7 @@ export async function POST(req: NextRequest) {
           failure: `${origin}/calculadora`,
           pending: `${origin}/gracias`,
         },
+        auto_return: 'approved',
         metadata: {
           tipo,
           superficie: String(superficie),
