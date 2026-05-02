@@ -72,28 +72,40 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'WebApplication',
-              name: 'CalculaTuObra.cl',
-              url: 'https://www.calculatuobra.cl',
-              description:
-                'Calculadora de presupuesto de construcción para Chile. Calcula el costo de quinchos, cocinas, ampliaciones, baños, cobertizos y locales comerciales.',
-              applicationCategory: 'FinanceApplication',
-              operatingSystem: 'Web',
-              inLanguage: 'es-CL',
-              offers: {
-                '@type': 'Offer',
-                price: '5990',
-                priceCurrency: 'CLP',
-                description: 'Informe PDF profesional de presupuesto de construcción',
-              },
-              provider: {
-                '@type': 'Organization',
+            __html: JSON.stringify([
+              {
+                '@context': 'https://schema.org',
+                '@type': 'WebApplication',
                 name: 'CalculaTuObra.cl',
                 url: 'https://www.calculatuobra.cl',
+                description: 'Calculadora de presupuesto de construcción para Chile.',
+                applicationCategory: 'FinanceApplication',
+                operatingSystem: 'Web',
+                inLanguage: 'es-CL',
+                offers: {
+                  '@type': 'Offer',
+                  price: '5990',
+                  priceCurrency: 'CLP',
+                  description: 'Informe PDF profesional de presupuesto de construcción',
+                },
+                provider: {
+                  '@type': 'Organization',
+                  name: 'CalculaTuObra.cl',
+                  url: 'https://www.calculatuobra.cl',
+                },
               },
-            }),
+              {
+                '@context': 'https://schema.org',
+                '@type': 'FAQPage',
+                mainEntity: [
+                  { '@type': 'Question', name: '¿Cuánto cuesta construir un quincho en Chile?', acceptedAnswer: { '@type': 'Answer', text: 'El costo de un quincho en Chile varía entre $350.000 y $700.000 por m², según el nivel de terminación. Un quincho de 30 m² con terminación media puede costar entre $12.000.000 y $16.000.000 CLP.' } },
+                  { '@type': 'Question', name: '¿Cuánto cuesta ampliar una casa en Chile?', acceptedAnswer: { '@type': 'Answer', text: 'Una ampliación de casa en Chile tiene un valor referencial de $320.000 a $600.000 por m². Para una ampliación de 20 m² con terminación media, el presupuesto estimado es de $8.000.000 a $12.000.000 CLP.' } },
+                  { '@type': 'Question', name: '¿Cuánto vale el metro cuadrado de construcción en Chile?', acceptedAnswer: { '@type': 'Answer', text: 'El valor del m² de construcción en Chile varía entre $200.000 y $800.000 según el tipo de obra y nivel de terminación. Los valores más frecuentes en Santiago están entre $350.000 y $600.000 por m².' } },
+                  { '@type': 'Question', name: '¿Cuánto cuesta construir un cobertizo?', acceptedAnswer: { '@type': 'Answer', text: 'Un cobertizo en Chile cuesta entre $220.000 y $480.000 por m². Para un cobertizo de 20 m², el presupuesto va de $4.400.000 a $9.600.000 CLP según materiales.' } },
+                  { '@type': 'Question', name: '¿Cuánto cuesta remodelar un baño en Chile?', acceptedAnswer: { '@type': 'Answer', text: 'Construir o remodelar un baño en Chile cuesta entre $400.000 y $800.000 por m². Un baño de 4 m² con terminación media tiene un costo referencial de $1.800.000 a $2.800.000 CLP.' } },
+                ],
+              },
+            ]),
           }}
         />
         <Navbar />
