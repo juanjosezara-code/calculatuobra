@@ -32,7 +32,7 @@ export default function CalculadoraPage() {
     setError('');
     const res = calcular(tipo, m2, terminacion);
     setResultado(res);
-    sessionStorage.setItem(
+    localStorage.setItem(
       'calculadora_resultado',
       JSON.stringify({ tipo, superficie: m2, terminacion, ...res }),
     );

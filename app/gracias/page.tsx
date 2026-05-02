@@ -39,7 +39,7 @@ export default function GraciasPage() {
   const [errorEmail, setErrorEmail]   = useState('');
 
   useEffect(() => {
-    const raw = sessionStorage.getItem('calculadora_resultado');
+    const raw = localStorage.getItem('calculadora_resultado');
     if (raw) {
       try { setDatos(JSON.parse(raw) as DatosPresupuesto); } catch { /* ignore */ }
     }
