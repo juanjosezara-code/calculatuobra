@@ -3,7 +3,7 @@
 import { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { generarPDF, type DatosPresupuesto } from '@/lib/generarPDF';
+import { generarPDF, generarPDFBase64, pdfFilename, type DatosPresupuesto } from '@/lib/generarPDF';
 import { formatearPesos, calcular, type TipoObra, type Terminacion } from '@/lib/calculos';
 
 const WA_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '56912345678';
@@ -88,10 +88,12 @@ function GraciasContent() {
     setErrorEmail('');
     try {
       const waUrl = buildWaUrl(datos);
+      const pdfBase64 = generarPDFBase64(datos);
+      const filename  = pdfFilename(datos);
       const res = await fetch('/api/send-email', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, datos, waUrl }),
+        body: JSON.stringify({ email, datos, waUrl, pdfBase64, filename }),
       });
       if (!res.ok) throw new Error();
       setEnviado(true);

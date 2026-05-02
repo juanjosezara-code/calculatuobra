@@ -6,10 +6,12 @@ import type { DatosPresupuesto } from '@/lib/generarPDF';
 export async function POST(req: NextRequest) {
   try {
     const resend = new Resend(process.env.RESEND_API_KEY);
-    const { email, datos, waUrl } = (await req.json()) as {
+    const { email, datos, waUrl, pdfBase64, filename } = (await req.json()) as {
       email: string;
       datos: DatosPresupuesto;
       waUrl: string;
+      pdfBase64?: string;
+      filename?: string;
     };
 
     if (!email || !datos) {
@@ -22,8 +24,14 @@ export async function POST(req: NextRequest) {
     await resend.emails.send({
       from,
       to: email,
-      subject: 'Tu informe de presupuesto + siguiente paso',
+      subject: `Tu informe de presupuesto — ${datos.tipo} ${datos.superficie} m²`,
       html: buildHtml({ datos, rango, waUrl }),
+      ...(pdfBase64 && {
+        attachments: [{
+          filename: filename ?? 'presupuesto.pdf',
+          content: pdfBase64,
+        }],
+      }),
     });
 
     return NextResponse.json({ ok: true });

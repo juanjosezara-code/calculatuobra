@@ -35,7 +35,7 @@ const W        = 210;
 const MARGEN   = 16;
 const CONTENIDO = W - MARGEN * 2;
 
-export function generarPDF(datos: DatosPresupuesto): void {
+function buildDoc(datos: DatosPresupuesto): jsPDF {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   let y = 0;
 
@@ -221,9 +221,20 @@ export function generarPDF(datos: DatosPresupuesto): void {
   doc.text('CalculaTuObra.cl', MARGEN, pageH - 8);
   doc.text(fechaActual(), W - MARGEN, pageH - 8, { align: 'right' });
 
-  // ── DESCARGA ──────────────────────────────────────────────────────────────
-  const nombre = `presupuesto-${datos.tipo.toLowerCase().replace(/\s+/g, '-')}-${datos.superficie}m2.pdf`;
-  doc.save(nombre);
+  return doc;
+}
+
+export function pdfFilename(datos: DatosPresupuesto): string {
+  return `presupuesto-${datos.tipo.toLowerCase().replace(/\s+/g, '-')}-${datos.superficie}m2.pdf`;
+}
+
+export function generarPDF(datos: DatosPresupuesto): void {
+  buildDoc(datos).save(pdfFilename(datos));
+}
+
+export function generarPDFBase64(datos: DatosPresupuesto): string {
+  const dataUri = buildDoc(datos).output('datauristring') as string;
+  return dataUri.split(',')[1];
 }
 
 function seccionTitulo(doc: jsPDF, texto: string, y: number) {
