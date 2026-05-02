@@ -5,6 +5,7 @@ import {
   type TipoObra,
   type Terminacion,
 } from './calculos';
+import LOGO_PNG_B64 from './logoPng';
 
 export interface DatosPresupuesto {
   tipo:        TipoObra;
@@ -35,64 +36,33 @@ const W        = 210;
 const MARGEN   = 16;
 const CONTENIDO = W - MARGEN * 2;
 
-function drawLogoIcon(doc: jsPDF, x: number, y: number, size: number) {
-  // White rounded badge (matching the web logo)
-  doc.setFillColor(255, 255, 255);
-  doc.roundedRect(x, y, size, size, size * 0.22, size * 0.22, 'F');
-
-  // Orange house inside the badge
-  const p = size * 0.18;
-  const iw = size - p * 2;
-  const ih = size - p * 2;
-  const rx = x + p;
-  const ry = y + p;
-  const roofH = ih * 0.42;
-
-  doc.setFillColor(...NARANJA);
-  doc.lines(
-    [[iw / 2, -roofH], [iw / 2, roofH], [0, ih - roofH], [-iw, 0], [0, -(ih - roofH)]],
-    rx, ry + roofH, [1, 1], 'F', true,
-  );
-
-  // White door cutout
-  doc.setFillColor(255, 255, 255);
-  doc.rect(rx + iw * 0.33, ry + ih * 0.55, iw * 0.34, ih * 0.45, 'F');
-}
-
 function buildDoc(datos: DatosPresupuesto): jsPDF {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' });
   let y = 0;
 
-  // ── HEADER (compact white bar) ───────────────────────────────────────────────
-  const HDR = 22;
+  // ── HEADER ───────────────────────────────────────────────────────────────────
+  const HDR = 20;
   doc.setFillColor(255, 255, 255);
   doc.rect(0, 0, W, HDR, 'F');
+  doc.setDrawColor(...LINEA);
+  doc.setLineWidth(0.4);
+  doc.line(0, HDR, W, HDR);
 
-  // Thin orange bottom border
-  doc.setFillColor(...NARANJA);
-  doc.rect(0, HDR - 0.8, W, 0.8, 'F');
+  // Logo PNG — 1146×349px → ratio 3.28
+  const logoH = 9;
+  const logoW = Math.round(logoH * 3.28);
+  const logoY = (HDR - logoH) / 2;
+  doc.addImage(LOGO_PNG_B64, 'PNG', MARGEN, logoY, logoW, logoH);
 
-  const iconSize = 13;
-  const iconY = (HDR - iconSize) / 2;
-  drawLogoIcon(doc, MARGEN, iconY, iconSize);
-
-  // "CalculaTuObra" dark + ".cl" orange
-  const textX = MARGEN + iconSize + 3;
-  const textY = HDR / 2 + 2;
+  // Título del documento y fecha
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(13);
-  doc.setTextColor(15, 23, 42);
-  doc.text('CalculaTuObra', textX, textY);
-  const anchoBase = doc.getTextWidth('CalculaTuObra');
-  doc.setTextColor(...NARANJA);
-  doc.text('.cl', textX + anchoBase, textY);
-
-  // Subtitle + date on right
+  doc.setFontSize(10);
+  doc.setTextColor(...NEGRO);
+  doc.text('Informe de Presupuesto Referencial', MARGEN + logoW + 4, HDR / 2 + 1);
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(...GRIS);
-  doc.text('Informe de Presupuesto Referencial', textX, textY + 5);
-  doc.text(fechaActual(), W - MARGEN, textY + 5, { align: 'right' });
+  doc.text(fechaActual(), W - MARGEN, HDR / 2 + 1, { align: 'right' });
 
   y = HDR + 8;
 
