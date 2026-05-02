@@ -22,7 +22,10 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const origin = req.headers.get('origin') ?? 'http://localhost:3000';
+    const origin = req.headers.get('origin') ?? 'https://www.calculatuobra.cl';
+
+    // Encode project data in the success URL so /gracias can reconstruct it
+    const p = Buffer.from(JSON.stringify({ tipo, superficie, terminacion })).toString('base64');
 
     const preference = new Preference(client);
     const result = await preference.create({
@@ -38,16 +41,11 @@ export async function POST(req: NextRequest) {
           },
         ],
         back_urls: {
-          success: `${origin}/gracias`,
+          success: `${origin}/gracias?p=${p}`,
           failure: `${origin}/calculadora`,
-          pending: `${origin}/gracias`,
+          pending: `${origin}/gracias?p=${p}`,
         },
         auto_return: 'approved',
-        metadata: {
-          tipo,
-          superficie: String(superficie),
-          terminacion,
-        },
       },
     });
 

@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { generarPDF, type DatosPresupuesto } from '@/lib/generarPDF';
-import { formatearPesos } from '@/lib/calculos';
+import { formatearPesos, calcular, type TipoObra, type Terminacion } from '@/lib/calculos';
 
 const WA_NUMBER = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '56912345678';
 
@@ -38,12 +39,29 @@ export default function GraciasPage() {
   const [enviado, setEnviado]         = useState(false);
   const [errorEmail, setErrorEmail]   = useState('');
 
+  const searchParams = useSearchParams();
+
   useEffect(() => {
+    // Primero intenta leer desde URL params (viene de redirección MP)
+    const p = searchParams.get('p');
+    if (p) {
+      try {
+        const { tipo, superficie, terminacion } = JSON.parse(
+          Buffer.from(p, 'base64').toString()
+        ) as { tipo: TipoObra; superficie: number; terminacion: Terminacion };
+        const resultado = calcular(tipo, superficie, terminacion);
+        const datos: DatosPresupuesto = { tipo, superficie, terminacion, ...resultado };
+        setDatos(datos);
+        localStorage.setItem('calculadora_resultado', JSON.stringify(datos));
+        return;
+      } catch { /* ignore */ }
+    }
+    // Fallback: localStorage
     const raw = localStorage.getItem('calculadora_resultado');
     if (raw) {
       try { setDatos(JSON.parse(raw) as DatosPresupuesto); } catch { /* ignore */ }
     }
-  }, []);
+  }, [searchParams]);
 
   function handleDescargar() {
     setErrorDesc('');
