@@ -41,28 +41,27 @@ function buildDoc(datos: DatosPresupuesto): jsPDF {
   let y = 0;
 
   // ── HEADER ───────────────────────────────────────────────────────────────────
-  const HDR = 20;
-  doc.setFillColor(255, 255, 255);
-  doc.rect(0, 0, W, HDR, 'F');
-  doc.setDrawColor(...LINEA);
-  doc.setLineWidth(0.4);
-  doc.line(0, HDR, W, HDR);
-
   // Logo PNG — 1146×349px → ratio 3.28
-  const logoH = 9;
-  const logoW = Math.round(logoH * 3.28);
-  const logoY = (HDR - logoH) / 2;
-  doc.addImage(LOGO_PNG_B64, 'PNG', MARGEN, logoY, logoW, logoH);
+  const logoH = 22;
+  const logoW = Math.round(logoH * 3.28); // 72mm
+  doc.addImage(LOGO_PNG_B64, 'PNG', MARGEN, 7, logoW, logoH);
 
-  // Título del documento y fecha
-  doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
-  doc.setTextColor(...NEGRO);
-  doc.text('Informe de Presupuesto Referencial', MARGEN + logoW + 4, HDR / 2 + 1);
+  // Subtítulo bajo el logo
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
+  doc.setFontSize(8);
   doc.setTextColor(...GRIS);
-  doc.text(fechaActual(), W - MARGEN, HDR / 2 + 1, { align: 'right' });
+  doc.text('Informe de Presupuesto Referencial', MARGEN + 1, 7 + logoH + 4);
+
+  // Fecha arriba a la derecha
+  doc.setFontSize(8);
+  doc.setTextColor(...GRIS);
+  doc.text(fechaActual(), W - MARGEN, 14, { align: 'right' });
+
+  // Línea naranja separadora
+  const HDR = 38;
+  doc.setDrawColor(...NARANJA);
+  doc.setLineWidth(0.6);
+  doc.line(MARGEN, HDR, W - MARGEN, HDR);
 
   y = HDR + 8;
 
